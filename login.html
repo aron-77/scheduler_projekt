@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Belépőoldal</title>
+  <link rel="stylesheet" type="text/css" href="login_style.css">
+
+</head>
+<body>
+  <div class="wrapper">
+    <div class="form-wrapper sign-in">
+      <form action="">
+        <h2>Belépés</h2>
+        <div class="input-group">
+          <input type="text" required>
+          <label for="">Felhasználónév</label>
+        </div>
+        <div class="input-group">
+          <input type="password" required>
+          <label for="">Jelszó</label>
+        </div>
+        <div class="remember">
+          <label><input type="checkbox"> Emlékezz rám</label>
+        </div>
+        <button type="submit">Belépés</button>
+        <div class="signUp-link">
+          <p>Nincs fiókod?? <a href="#" class="signUpBtn-link">Regisztráció</a></p>
+        </div>
+      </form>
+    </div>
+    <div class="form-wrapper sign-up">
+      <form action="">
+        <h2>Regisztráció</h2>
+        <div class="input-group">
+          <input type="text" required>
+          <label for="">Felhasználónév</label>
+        </div>
+        <div class="input-group">
+          <input type="email" required>
+          <label for="">Email</label>
+        </div>
+        <div class="input-group">
+          <input type="password" required>
+          <label for="">Jelszó</label>
+        </div>
+        <div class="remember">
+          <label><input type="checkbox"> Elfogadom a szerződési feltételeket</label>
+        </div>
+        <button type="submit">Regisztráció</button>
+        <div class="signUp-link">
+          <p>Már van fiókod <a href="#" class="signInBtn-link">Belépés</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="login_script.js"></script>
+
+</body>
+</html>
