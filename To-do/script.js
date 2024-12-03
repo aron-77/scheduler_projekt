@@ -61,12 +61,21 @@ console.log(eventsArr);
 
 //function to add days in days with class day and prev-date next-date on previous month and next month days and active on today
 function initCalendar() {
+  //const firstDay = new Date(year, month, 1);
+
+
   const firstDay = new Date(year, month, 1);
+  let day = firstDay.getDay();
+  // Ha vasárnap, akkor egyel korábbi napra állítjuk
+  if (day === 0) {
+    day = 6;
+  }
+
   const lastDay = new Date(year, month + 1, 0);
   const prevLastDay = new Date(year, month, 0);
   const prevDays = prevLastDay.getDate();
   const lastDate = lastDay.getDate();
-  const day = firstDay.getDay();
+  //const day = firstDay.getDay();
   const nextDays = 7 - lastDay.getDay() - 1;
 
   date.innerHTML = months[month] + " " + year;
@@ -226,16 +235,24 @@ function gotoDate() {
       return;
     }
   }
-  alert("Invalid Date");
+  alert("Érvénytelen Dátum");
 }
 
-//function get active day day name and date and update eventday eventdate
+
 function getActiveDay(date) {
   const day = new Date(year, month, date);
-  const dayName = day.toString().split(" ")[0];
-  eventDay.innerHTML = dayName;
-  eventDate.innerHTML = date + " " + months[month] + " " + year;
+
+  // Formátum: "2024. január 15. 15:32"
+  const formattedDateTime = day.toLocaleString('hu-HU', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    // hour: 'numeric',
+    // minute: 'numeric'
+  });
+  eventDate.innerHTML = formattedDateTime;
 }
+
 
 //function update events when a day is active
 function updateEvents(date) {
