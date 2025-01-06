@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2024. Okt 14. 09:35
+-- Létrehozás ideje: 2025. Jan 06. 12:59
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -30,7 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `schedule` (
   `schedule_id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
-  `description` text DEFAULT NULL
+  `description` text DEFAULT NULL,
+  `scheduled_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
