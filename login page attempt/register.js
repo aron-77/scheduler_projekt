@@ -3,7 +3,7 @@ const nev = document.getElementById('name-input')
 const email = document.getElementById('email-input')
 const jelszo = document.getElementById('password-input')
 const jelszo_ism = document.getElementById('re-password-input')
-const hibuzenet = document.getElementById('error-message')
+const hibauzenet = document.getElementById('error-message')
 
 form.addEventListener('submit', (e) => {
     
@@ -23,7 +23,7 @@ form.addEventListener('submit', (e) => {
     }
 })
 
-function getSignupFormErrors(nev, email, jelszo, jelszo_ismetles) {
+function getSignupFormErrors(nev, email, jelszo, jelszo_ism) {
     let errors =[]
 
     if (nev === '' || nev === null) {     
