@@ -4,7 +4,7 @@
 session_start();
 require_once('connect.php')
 
-if (isset($_POST['username']) && isset($_POST['password'])) 
+if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['email'])) 
 {
     function validate($data)
     {       
@@ -16,6 +16,7 @@ if (isset($_POST['username']) && isset($_POST['password']))
 
     $username = validate($_POST['username']);
     $password = validate($_POST['password']);
+    $email = validate($_POST['email']);
     
     if (empty($username)) 
     {
@@ -45,14 +46,14 @@ if (isset($_POST['username']) && isset($_POST['password']))
             }
             else
             {                
-                header("Location: index.php?error=Incorect Username or password");
+                header("Location: index.php?error=Incorect Username, email or password");
                 exit();
 
             }        
         }
         else
         {            
-            header("Location: index.php?error=Incorect Username or password");
+            header("Location: index.php?error=Incorect Username, email or password");
             
             exit();
         }}}
