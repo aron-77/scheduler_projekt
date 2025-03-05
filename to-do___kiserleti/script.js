@@ -384,8 +384,19 @@ addEventSubmit.addEventListener("click", () => {
     },
     body: `day=${activeDay}&month=${month + 1}&year=${year}&title=${eventTitle}&time=${timeFrom} - ${timeTo}`,
   })
-  .then(() => {
-    getEvents();
+  .then(response => response.json()) // JSON formátumban várjuk a választ
+  .then(data => {
+    if (data.success) {
+      console.log('Event added:', data.message);
+      getEvents();
+    } else {
+      console.error('Error adding event:', data.message);
+      alert('Hiba történt az esemény hozzáadásakor: ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Network error:', error);
+    alert('Hálózati hiba történt.');
   });
 });
 
@@ -401,8 +412,19 @@ eventsContainer.addEventListener("click", (e) => {
         },
         body: `id=${eventID}`,
       })
-      .then(() => {
-        getEvents();
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log('Event deleted:', data.message);
+          getEvents();
+        } else {
+          console.error('Error deleting event:', data.message);
+          alert('Hiba történt az esemény törlésekor: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Network error:', error);
+        alert('Hálózati hiba történt.');
       });
     }
   }
@@ -421,8 +443,19 @@ eventsContainer.addEventListener("click", (e) => {
       },
       body: `id=${eventID}&completed=${completed}`,
     })
-    .then(() => {
-      getEvents();
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log('Event updated:', data.message);
+        getEvents();
+      } else {
+        console.error('Error updating event:', data.message);
+        alert('Hiba történt az esemény frissítésekor: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Network error:', error);
+      alert('Hálózati hiba történt.');
     });
   }
 });
@@ -462,6 +495,10 @@ function getEvents() {
         }
       });
       updateEvents(activeDay);
+    })
+    .catch(error => {
+      console.error('Network error:', error);
+      alert('Hálózati hiba történt az események lekérésekor.');
     });
 }
 
