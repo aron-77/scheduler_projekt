@@ -298,7 +298,7 @@ addEventSubmit.addEventListener("click", () => {
     return;
   }
 
-  //check correct time format 24 hour
+  // Check correct time format 24 hour
   const timeFromArr = eventTimeFrom.split(":");
   const timeToArr = eventTimeTo.split(":");
   if (
@@ -316,7 +316,7 @@ addEventSubmit.addEventListener("click", () => {
   const timeFrom = convertTime(eventTimeFrom);
   const timeTo = convertTime(eventTimeTo);
 
-  //check if event is already added
+  // Check if event is already added
   let eventExist = false;
   eventsArr.forEach((event) => {
     if (
@@ -371,7 +371,7 @@ addEventSubmit.addEventListener("click", () => {
   addEventFrom.value = "";
   addEventTo.value = "";
   updateEvents(activeDay);
-  //select active day and add event class if not added
+  // Select active day and add event class if not added
   const activeDayEl = document.querySelector(".day.active");
   if (!activeDayEl.classList.contains("event")) {
     activeDayEl.classList.add("event");
@@ -384,7 +384,7 @@ addEventSubmit.addEventListener("click", () => {
     },
     body: `day=${activeDay}&month=${month + 1}&year=${year}&title=${eventTitle}&time=${timeFrom} - ${timeTo}`,
   })
-  .then(response => response.json()) // JSON formátumban várjuk a választ
+  .then(response => response.json()) // Expecting JSON response
   .then(data => {
     if (data.success) {
       console.log('Event added:', data.message);

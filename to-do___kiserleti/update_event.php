@@ -1,17 +1,19 @@
 <?php
 header('Content-Type: application/json');
-require_once ('db_connect.php');
+require_once 'db_connect.php';
 
 $id = $_POST['id'];
 $completed = $_POST['completed'];
 
-$sql = "UPDATE events SET completed = $completed WHERE id = $id";
+$stmt = $conn->prepare("UPDATE events SET completed = ? WHERE id = ?");
+$stmt->bind_param("ii", $completed, $id);
 
-if ($conn->query($sql) === TRUE) {
+if ($stmt->execute()) {
     echo json_encode(array('success' => true, 'message' => 'Event updated successfully'));
 } else {
-    echo json_encode(array('success' => false, 'message' => 'Error: ' . $sql . '<br>' . $conn->error));
+    echo json_encode(array('success' => false, 'message' => 'Error: ' . $stmt->error));
 }
 
+$stmt->close();
 $conn->close();
 ?>
