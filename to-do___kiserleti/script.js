@@ -226,7 +226,7 @@ function updateEvents(date) {
       year === event.year
     ) {
       event.events.forEach((event) => {
-        events += `<div class="event ${event.completed ? 'completed' : ''}">
+        events += `<div class="event ${event.completed ? 'completed' : ''}" data-id="${event.id}">
             <div class="title">
               <h3 class="event-title">${event.title}</h3>
             </div>
@@ -376,36 +376,34 @@ addEventSubmit.addEventListener("click", () => {
   if (!activeDayEl.classList.contains("event")) {
     activeDayEl.classList.add("event");
   }
+
+  fetch('add_event.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `day=${activeDay}&month=${month + 1}&year=${year}&title=${eventTitle}&time=${timeFrom} - ${timeTo}`,
+  })
+  .then(() => {
+    getEvents();
+  });
 });
 
 //function to delete event when clicked on event
 eventsContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("event")) {
     if (confirm("Biztos készen vagy a feladattal?")) {
-      const eventTitle = e.target.children[0].children[1].innerHTML;
-      eventsArr.forEach((event) => {
-        if (
-          event.day === activeDay &&
-          event.month === month + 1 &&
-          event.year === year
-        ) {
-          event.events.forEach((item, index) => {
-            if (item.title === eventTitle) {
-              event.events.splice(index, 1);
-            }
-          });
-          //if no events left in a day then remove that day from eventsArr
-          if (event.events.length === 0) {
-            eventsArr.splice(eventsArr.indexOf(event), 1);
-            //remove event class from day
-            const activeDayEl = document.querySelector(".day.active");
-            if (activeDayEl.classList.contains("event")) {
-              activeDayEl.classList.remove("event");
-            }
-          }
-        }
+      const eventID = e.target.getAttribute("data-id");
+      fetch('delete_event.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `id=${eventID}`,
+      })
+      .then(() => {
+        getEvents();
       });
-      updateEvents(activeDay);
     }
   }
 });
@@ -413,23 +411,19 @@ eventsContainer.addEventListener("click", (e) => {
 //function to mark event as completed when clicked on event
 eventsContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("event")) {
-    const eventTitle = e.target.querySelector(".event-title").innerHTML;
-    eventsArr.forEach((event) => {
-      if (
-        event.day === activeDay &&
-        event.month === month + 1 &&
-        event.year === year
-      ) {
-        event.events.forEach((item) => {
-          if (item.title === eventTitle) {
-            item.completed = !item.completed;
-            // Toggle the 'completed' class on the event element
-            e.target.classList.toggle("completed");
-          }
-        });
-      }
+    const eventID = e.target.getAttribute("data-id");
+    const completed = e.target.classList.contains("completed") ? 1 : 0;
+
+    fetch('update_event.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `id=${eventID}&completed=${completed}`,
+    })
+    .then(() => {
+      getEvents();
     });
-    updateEvents(activeDay);
   }
 });
 
@@ -440,11 +434,35 @@ function saveEvents() {
 
 //function to get events from local storage
 function getEvents() {
-  //check if events are already saved in local storage then return event else nothing
-  if (localStorage.getItem("events") === null) {
-    return;
-  }
-  eventsArr.push(...JSON.parse(localStorage.getItem("events")));
+  fetch('get_events.php')
+    .then(response => response.json())
+    .then(data => {
+      eventsArr.length = 0; // Clear the array
+      data.forEach(event => {
+        let existingDay = eventsArr.find(item => item.day === event.day && item.month === event.month && item.year === event.year);
+        if (existingDay) {
+          existingDay.events.push({
+            id: event.id,
+            title: event.title,
+            time: event.time,
+            completed: event.completed == 1,
+          });
+        } else {
+          eventsArr.push({
+            day: event.day,
+            month: event.month,
+            year: event.year,
+            events: [{
+              id: event.id,
+              title: event.title,
+              time: event.time,
+              completed: event.completed == 1,
+            }]
+          });
+        }
+      });
+      updateEvents(activeDay);
+    });
 }
 
 function convertTime(time) {
@@ -457,6 +475,8 @@ function convertTime(time) {
   time = timeHour + ":" + timeMin + " " + timeFormat;
   return time;
 }
+
+getEvents(); // Hívjuk meg a getEvents függvényt az oldal betöltésekor
 
 
 
