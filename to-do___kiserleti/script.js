@@ -377,7 +377,7 @@ addEventSubmit.addEventListener("click", () => {
     activeDayEl.classList.add("event");
   }
 
-  fetch('add_event.php', {
+  fetch('scheduler/add_event.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -394,7 +394,7 @@ eventsContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("event")) {
     if (confirm("Biztos készen vagy a feladattal?")) {
       const eventID = e.target.getAttribute("data-id");
-      fetch('delete_event.php', {
+      fetch('scheduler/delete_event.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -414,7 +414,7 @@ eventsContainer.addEventListener("click", (e) => {
     const eventID = e.target.getAttribute("data-id");
     const completed = e.target.classList.contains("completed") ? 1 : 0;
 
-    fetch('update_event.php', {
+    fetch('scheduler/update_event.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -434,7 +434,7 @@ function saveEvents() {
 
 //function to get events from local storage
 function getEvents() {
-  fetch('get_events.php')
+  fetch('scheduler/get_events.php')
     .then(response => response.json())
     .then(data => {
       eventsArr.length = 0; // Clear the array
