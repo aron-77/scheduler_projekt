@@ -18,7 +18,7 @@ const calendar = document.querySelector(".calendar"),
   addEventSubmit = document.querySelector(".add-event-btn ");
 
 let today = new Date();
-let activeDay;
+let activeDay = today.getDate(); // Initial activeDay set to today's date
 let month = today.getMonth();
 let year = today.getFullYear();
 
@@ -73,9 +73,7 @@ function initCalendar() {
       let event = eventsArr.some(eventObj => eventObj.day === i && eventObj.month === month + 1 && eventObj.year === year);
       
       if (i === new Date().getDate() && year === new Date().getFullYear() && month === new Date().getMonth()) {
-          activeDay = i;
           getActiveDay(i);
-          updateEvents(i);
           days += `<div class="day today active ${event ? 'event' : ''}">${i}</div>`;
       } else {
           days += `<div class="day ${event ? 'event' : ''}">${i}</div>`;
@@ -89,6 +87,7 @@ function initCalendar() {
 
   daysContainer.innerHTML = days;
   addListner();
+  updateEvents(activeDay); // Update events after initializing calendar
 }
 
 //function to add month and year on prev and next button
@@ -120,9 +119,9 @@ function addListner() {
   const days = document.querySelectorAll(".day");
   days.forEach((day) => {
     day.addEventListener("click", (e) => {
-      getActiveDay(e.target.innerHTML);
-      updateEvents(Number(e.target.innerHTML));
-      activeDay = Number(e.target.innerHTML);
+      activeDay = Number(e.target.innerHTML); // Update activeDay
+      getActiveDay(activeDay);
+      updateEvents(activeDay);
       //remove active
       days.forEach((day) => {
         day.classList.remove("active");
@@ -168,6 +167,7 @@ todayBtn.addEventListener("click", () => {
   today = new Date();
   month = today.getMonth();
   year = today.getFullYear();
+  activeDay = today.getDate(); // Update activeDay
   initCalendar();
 });
 
@@ -494,7 +494,7 @@ function getEvents() {
           });
         }
       });
-      updateEvents(activeDay);
+      updateEvents(activeDay); // Update events after loading
     })
     .catch(error => {
       console.error('Network error:', error);
@@ -514,3 +514,5 @@ function convertTime(time) {
 }
 
 getEvents(); // Hívjuk meg a getEvents függvényt az oldal betöltésekor
+
+
