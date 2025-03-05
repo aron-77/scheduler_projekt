@@ -468,38 +468,39 @@ function saveEvents() {
 //function to get events from local storage
 function getEvents() {
   fetch('/scheduler/get_events.php')
-    .then(response => response.json())
-    .then(data => {
-      eventsArr.length = 0; // Clear the array
-      data.forEach(event => {
-        let existingDay = eventsArr.find(item => item.day === event.day && item.month === event.month && item.year === event.year);
-        if (existingDay) {
-          existingDay.events.push({
-            id: event.id,
-            title: event.title,
-            time: event.time,
-            completed: event.completed == 1,
+      .then(response => response.json())
+      .then(data => {
+          eventsArr.length = 0; // Clear the array
+          data.forEach(event => {
+              let existingDay = eventsArr.find(item => item.day === event.day && item.month === event.month && item.year === event.year);
+              if (existingDay) {
+                  existingDay.events.push({
+                      id: event.id,
+                      title: event.title,
+                      time: event.time,
+                      completed: event.completed == 1,
+                  });
+              } else {
+                  eventsArr.push({
+                      day: event.day,
+                      month: event.month,
+                      year: event.year,
+                      events: [{
+                          id: event.id,
+                          title: event.title,
+                          time: event.time,
+                          completed: event.completed == 1,
+                      }]
+                  });
+              }
           });
-        } else {
-          eventsArr.push({
-            day: event.day,
-            month: event.month,
-            year: event.year,
-            events: [{
-              id: event.id,
-              title: event.title,
-              time: event.time,
-              completed: event.completed == 1,
-            }]
-          });
-        }
+          console.log("Events loaded:", eventsArr); // Add this line for debugging
+          updateEvents(activeDay); // Update events after loading
+      })
+      .catch(error => {
+          console.error('Network error:', error);
+          alert('Hálózati hiba történt az események lekérésekor.');
       });
-      updateEvents(activeDay); // Update events after loading
-    })
-    .catch(error => {
-      console.error('Network error:', error);
-      alert('Hálózati hiba történt az események lekérésekor.');
-    });
 }
 
 function convertTime(time) {
@@ -513,6 +514,6 @@ function convertTime(time) {
   return time;
 }
 
-getEvents(); // Hívjuk meg a getEvents függvényt az oldal betöltésekor
+getEvents(); //getEvents függvény meghívása az oldal betöltésekor
 
 
