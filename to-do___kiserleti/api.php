@@ -1,8 +1,8 @@
 <?php
 // Adatbázis kapcsolat
 $servername = "localhost";
-$username = "felhasznalo"; // Módosítsd a felhasználónevedre
-$password = "jelszo"; // Módosítsd a jelszavadra
+$username = "root"; 
+$password = ""; 
 $dbname = "feladatkezelo";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

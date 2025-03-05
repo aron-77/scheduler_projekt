@@ -37,7 +37,6 @@ const months = [
   "December",
 ];
 
-
 const eventsArr = [];
 getEvents();
 console.log(eventsArr);
@@ -203,7 +202,6 @@ function gotoDate() {
   alert("Érvénytelen Dátum");
 }
 
-
 function getActiveDay(date) {
   const day = new Date(year, month, date);
 
@@ -218,7 +216,6 @@ function getActiveDay(date) {
   eventDate.innerHTML = formattedDateTime;
 }
 
-
 //function update events when a day is active
 function updateEvents(date) {
   let events = "";
@@ -229,9 +226,8 @@ function updateEvents(date) {
       year === event.year
     ) {
       event.events.forEach((event) => {
-        events += `<div class="event">
+        events += `<div class="event ${event.completed ? 'completed' : ''}">
             <div class="title">
-              <i class="fas fa-circle"></i>
               <h3 class="event-title">${event.title}</h3>
             </div>
             <div class="event-time">
@@ -269,11 +265,6 @@ document.addEventListener("click", (e) => {
 addEventTitle.addEventListener("input", (e) => {
   addEventTitle.value = addEventTitle.value.slice(0, 60);
 });
-
-
-
-
-
 
 //allow only time in eventtime from and to
 addEventFrom.addEventListener("input", (e) => {
@@ -346,6 +337,7 @@ addEventSubmit.addEventListener("click", () => {
   const newEvent = {
     title: eventTitle,
     time: timeFrom + " - " + timeTo,
+    completed: false
   };
   console.log(newEvent);
   console.log(activeDay);
@@ -414,6 +406,27 @@ eventsContainer.addEventListener("click", (e) => {
       });
       updateEvents(activeDay);
     }
+  }
+});
+
+//function to mark event as completed when clicked on event
+eventsContainer.addEventListener("click", (e) => {
+  if (e.target.classList.contains("event")) {
+    const eventTitle = e.target.querySelector(".event-title").innerHTML;
+    eventsArr.forEach((event) => {
+      if (
+        event.day === activeDay &&
+        event.month === month + 1 &&
+        event.year === year
+      ) {
+        event.events.forEach((item) => {
+          if (item.title === eventTitle) {
+            item.completed = !item.completed;
+          }
+        });
+      }
+    });
+    updateEvents(activeDay);
   }
 });
 

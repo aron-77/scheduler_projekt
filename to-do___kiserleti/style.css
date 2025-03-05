@@ -475,6 +475,11 @@ body {
   color: var(--primary-clr);
 }
 
+/* Add this CSS to your stylesheet */
+.completed .event-title {
+  text-decoration: line-through;
+}
+
 /* media queries */
 
 @media screen and (max-width: 1000px) {
