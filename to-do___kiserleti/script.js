@@ -233,6 +233,7 @@ function updateEvents(date) {
             <div class="event-time">
               <span class="event-time">${event.time}</span>
             </div>
+            ${event.completed ? '' : '<span class="tick">✔</span>'}
         </div>`;
       });
     }
@@ -380,7 +381,7 @@ addEventSubmit.addEventListener("click", () => {
 //function to delete event when clicked on event
 eventsContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("event")) {
-    if (confirm("Are you sure you want to delete this event?")) {
+    if (confirm("Biztos készen vagy a feladattal?")) {
       const eventTitle = e.target.children[0].children[1].innerHTML;
       eventsArr.forEach((event) => {
         if (
@@ -422,6 +423,8 @@ eventsContainer.addEventListener("click", (e) => {
         event.events.forEach((item) => {
           if (item.title === eventTitle) {
             item.completed = !item.completed;
+            // Toggle the 'completed' class on the event element
+            e.target.classList.toggle("completed");
           }
         });
       }

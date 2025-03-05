@@ -346,6 +346,30 @@ body {
 .events .event:hover::after {
   display: flex;
 }
+/* Hide the tick mark when the event is completed */
+.events .event.completed::after {
+  display: none;
+}
+.events .event .tick {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  font-size: 3rem;
+  line-height: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.3;
+  color: var(--primary-clr);
+  transform: translateY(-50%);
+}
+.events .event:hover .tick {
+  display: flex;
+}
+/* Hide the tick mark when the event is completed */
+.events .event.completed .tick {
+  display: none;
+}
 .add-event {
   position: absolute;
   bottom: 30px;
