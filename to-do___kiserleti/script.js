@@ -514,23 +514,3 @@ function convertTime(time) {
 }
 
 getEvents(); // Hívjuk meg a getEvents függvényt az oldal betöltésekor
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
