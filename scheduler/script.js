@@ -274,10 +274,12 @@ function updateEvents(date) {
   eventsContainer.innerHTML = events;
   // Add event listener to each event element for updating completed status
   document.querySelectorAll('.event').forEach(eventElement => {
-    eventElement.addEventListener('click', function() {
-        const eventId = this.getAttribute('data-id');
-        const currentCompleted = this.classList.contains('completed');
-        updateEvent(eventId, !currentCompleted); // Toggle completed status
+    eventElement.addEventListener('click', function(e) {
+        if (e.target.classList.contains('tick')) {
+            const eventId = this.getAttribute('data-id');
+            const currentCompleted = this.classList.contains('completed');
+            updateEvent(eventId, !currentCompleted); // Toggle completed status
+        }
     });
   });
 }
