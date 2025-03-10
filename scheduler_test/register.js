@@ -22,7 +22,7 @@ document.getElementById('register-form').addEventListener('submit', function(eve
     .then(data => {
         document.getElementById('message').textContent = data.message;
         if (data.success) {
-            window.location.href = 'login.html';
+            window.location.href = 'index.html'; // Módosítás: átirányítás az index.html-re
         }
     })
     .catch(error => {
