@@ -18,7 +18,7 @@ const calendar = document.querySelector(".calendar"),
   addEventSubmit = document.querySelector(".add-event-btn ");
 
 let today = new Date();
-let activeDay = today.getDate(); // Initial activeDay set to today's date
+let activeDay;
 let month = today.getMonth();
 let year = today.getFullYear();
 
@@ -73,7 +73,9 @@ function initCalendar() {
       let event = eventsArr.some(eventObj => eventObj.day === i && eventObj.month === month + 1 && eventObj.year === year);
       
       if (i === new Date().getDate() && year === new Date().getFullYear() && month === new Date().getMonth()) {
+          activeDay = i;
           getActiveDay(i);
+          updateEvents(i);
           days += `<div class="day today active ${event ? 'event' : ''}">${i}</div>`;
       } else {
           days += `<div class="day ${event ? 'event' : ''}">${i}</div>`;
@@ -87,7 +89,6 @@ function initCalendar() {
 
   daysContainer.innerHTML = days;
   addListner();
-  updateEvents(activeDay); // Update events after initializing calendar
 }
 
 //function to add month and year on prev and next button
@@ -119,9 +120,9 @@ function addListner() {
   const days = document.querySelectorAll(".day");
   days.forEach((day) => {
     day.addEventListener("click", (e) => {
-      activeDay = Number(e.target.innerHTML); // Update activeDay
-      getActiveDay(activeDay);
-      updateEvents(activeDay);
+      getActiveDay(e.target.innerHTML);
+      updateEvents(Number(e.target.innerHTML));
+      activeDay = Number(e.target.innerHTML);
       //remove active
       days.forEach((day) => {
         day.classList.remove("active");
@@ -167,7 +168,6 @@ todayBtn.addEventListener("click", () => {
   today = new Date();
   month = today.getMonth();
   year = today.getFullYear();
-  activeDay = today.getDate(); // Update activeDay
   initCalendar();
 });
 
@@ -468,39 +468,38 @@ function saveEvents() {
 //function to get events from local storage
 function getEvents() {
   fetch('/scheduler/get_events.php')
-      .then(response => response.json())
-      .then(data => {
-          eventsArr.length = 0; // Clear the array
-          data.forEach(event => {
-              let existingDay = eventsArr.find(item => item.day === event.day && item.month === event.month && item.year === event.year);
-              if (existingDay) {
-                  existingDay.events.push({
-                      id: event.id,
-                      title: event.title,
-                      time: event.time,
-                      completed: event.completed == 1,
-                  });
-              } else {
-                  eventsArr.push({
-                      day: event.day,
-                      month: event.month,
-                      year: event.year,
-                      events: [{
-                          id: event.id,
-                          title: event.title,
-                          time: event.time,
-                          completed: event.completed == 1,
-                      }]
-                  });
-              }
+    .then(response => response.json())
+    .then(data => {
+      eventsArr.length = 0; // Clear the array
+      data.forEach(event => {
+        let existingDay = eventsArr.find(item => item.day === event.day && item.month === event.month && item.year === event.year);
+        if (existingDay) {
+          existingDay.events.push({
+            id: event.id,
+            title: event.title,
+            time: event.time,
+            completed: event.completed == 1,
           });
-          console.log("Events loaded:", eventsArr); // Add this line for debugging
-          updateEvents(activeDay); // Update events after loading
-      })
-      .catch(error => {
-          console.error('Network error:', error);
-          alert('Hálózati hiba történt az események lekérésekor.');
+        } else {
+          eventsArr.push({
+            day: event.day,
+            month: event.month,
+            year: event.year,
+            events: [{
+              id: event.id,
+              title: event.title,
+              time: event.time,
+              completed: event.completed == 1,
+            }]
+          });
+        }
       });
+      updateEvents(activeDay);
+    })
+    .catch(error => {
+      console.error('Network error:', error);
+      alert('Hálózati hiba történt az események lekérésekor.');
+    });
 }
 
 function convertTime(time) {
@@ -514,6 +513,24 @@ function convertTime(time) {
   return time;
 }
 
-getEvents(); //getEvents függvény meghívása az oldal betöltésekor
+getEvents(); // Hívjuk meg a getEvents függvényt az oldal betöltésekor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
