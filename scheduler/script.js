@@ -292,7 +292,7 @@ async function updateEvent(id, completed) {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: `id=${id}&completed=${completed}`,
+            body: `id=${id}&completed=${completed ? 1 : 0}`, // Send 1 for true, 0 for false
         });
         const data = await response.json();
         if (data.success) {

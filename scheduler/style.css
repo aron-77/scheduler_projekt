@@ -328,9 +328,9 @@ body {
 .events .event:hover .event-time {
   color: #fff;
 }
-/* add tick in event after */
+/* Remove the old tick mark */
 .events .event::after {
-  content: "✓";
+  content: "";
   position: absolute;
   top: 50%;
   right: 0;
@@ -344,32 +344,36 @@ body {
   transform: translateY(-50%);
 }
 .events .event:hover::after {
-  display: flex;
+  display: none;
 }
+
 /* Hide the tick mark when the event is completed */
 .events .event.completed::after {
   display: none;
 }
+
 .events .event .tick {
   position: absolute;
   top: 50%;
-  right: 0;
-  font-size: 3rem;
+  right: 10px; /* Adjust as needed */
+  font-size: 2rem; /* Adjust as needed */
   line-height: 1;
-  display: none;
+  display: flex; /* Initially visible */
   align-items: center;
   justify-content: center;
-  opacity: 0.3;
+  opacity: 0.7; /* Adjust as needed */
   color: var(--primary-clr);
   transform: translateY(-50%);
+  cursor: pointer; /* Add this line */
+  pointer-events: auto; /* Add this line */
+  z-index: 10; /* Add this line to make sure it's on top */
 }
-.events .event:hover .tick {
-  display: flex;
-}
+
 /* Hide the tick mark when the event is completed */
 .events .event.completed .tick {
   display: none;
 }
+
 .add-event {
   position: absolute;
   bottom: 30px;
