@@ -10,15 +10,15 @@ const calendar = document.querySelector(".calendar"),
   eventDate = document.querySelector(".event-date"),
   eventsContainer = document.querySelector(".events"),
   addEventBtn = document.querySelector(".add-event"),
-  addEventWrapper = document.querySelector(".add-event-wrapper"),
-  addEventCloseBtn = document.querySelector(".close"),
-  addEventTitle = document.querySelector(".event-name"),
-  addEventFrom = document.querySelector(".event-time-from"),
-  addEventTo = document.querySelector(".event-time-to"),
-  addEventSubmit = document.querySelector(".add-event-btn");
+  addEventWrapper = document.querySelector(".add-event-wrapper "),
+  addEventCloseBtn = document.querySelector(".close "),
+  addEventTitle = document.querySelector(".event-name "),
+  addEventFrom = document.querySelector(".event-time-from "),
+  addEventTo = document.querySelector(".event-time-to "),
+  addEventSubmit = document.querySelector(".add-event-btn ");
 
 let today = new Date();
-let activeDay;
+let activeDay = today.getDate();
 let month = today.getMonth();
 let year = today.getFullYear();
 
@@ -37,21 +37,65 @@ const months = [
   "December",
 ];
 
-const eventsArr = [];
-getEvents();
-console.log(eventsArr);
+let eventsArr = [];
+
+//function to fetch the events from the database
+async function getEvents() {
+  try {
+    const response = await fetch("http://localhost/scheduler/get_events.php");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    // Map the data from the server to the structure expected by the frontend
+    eventsArr = data.map(event => ({
+        day: parseInt(event.day), // Ensure these are numbers
+        month: parseInt(event.month),
+        year: parseInt(event.year),
+        events: [{
+            id: event.id,
+            title: event.title,
+            time: event.time,
+            completed: Boolean(event.completed) // Ensure this is a boolean
+        }]
+    }));
+    console.log(eventsArr);
+    initCalendar();
+  } catch (error) {
+    console.error("Error fetching events:", error);
+  }
+}
+
+//function to save the events to the database
+async function saveEvents(newEvent) {
+  try {
+    const response = await fetch("http://localhost/scheduler/add_event.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `day=${newEvent.day}&month=${newEvent.month}&year=${newEvent.year}&title=${newEvent.title}&time=${newEvent.time}`,
+    });
+    const data = await response.json();
+    if (data.success) {
+        console.log("Event saved:", data.message);
+        getEvents(); // Refresh events after saving
+    } else {
+        console.error("Error saving event:", data.message);
+    }
+  } catch (error) {
+    console.error("Error saving event:", error);
+  }
+}
 
 //function to add days in days with class day and prev-date next-date on previous month and next month days and active on today
-
 function initCalendar() {
   const firstDay = new Date(year, month, 1);
   let day = firstDay.getDay();
-  
-  // Adjust Sunday (0) to be treated as the last day of the week (6)
-  if (day === 0) { 
-      day = 6; 
-  } else { 
-      day--; 
+  if (day === 0) {
+    day = 6;
+  } else {
+    day--;
   }
 
   const lastDay = new Date(year, month + 1, 0);
@@ -63,35 +107,30 @@ function initCalendar() {
   date.innerHTML = months[month] + " " + year;
   let days = "";
 
-  // Add previous month's days
   for (let x = day; x > 0; x--) {
-      days += `<div class="day prev-date">${prevDays - x + 1}</div>`;
+    days += `<div class="day prev-date">${prevDays - x + 1}</div>`;
   }
 
-  // Add current month's days
   for (let i = 1; i <= lastDate; i++) {
-      let event = eventsArr.some(eventObj => eventObj.day === i && eventObj.month === month + 1 && eventObj.year === year);
-      
-      if (i === new Date().getDate() && year === new Date().getFullYear() && month === new Date().getMonth()) {
-          activeDay = i;
-          getActiveDay(i);
-          updateEvents(i);
-          days += `<div class="day today active ${event ? 'event' : ''}">${i}</div>`;
-      } else {
-          days += `<div class="day ${event ? 'event' : ''}">${i}</div>`;
-      }
+    let event = eventsArr.some(eventObj => eventObj.day === i && eventObj.month === month + 1 && eventObj.year === year);
+    
+    if (i === new Date().getDate() && year === new Date().getFullYear() && month === new Date().getMonth()) {
+        getActiveDay(i);
+        days += `<div class="day today active ${event ? 'event' : ''}">${i}</div>`;
+    } else {
+        days += `<div class="day ${event ? 'event' : ''}">${i}</div>`;
+    }
   }
 
-  // Add next month's days
   for (let j = 1; j <= nextDays; j++) {
-      days += `<div class="day next-date">${j}</div>`;
+    days += `<div class="day next-date">${j}</div>`;
   }
 
   daysContainer.innerHTML = days;
   addListner();
+  updateEvents(activeDay);
 }
 
-//function to add month and year on prev and next button
 function prevMonth() {
   month--;
   if (month < 0) {
@@ -113,26 +152,20 @@ function nextMonth() {
 prev.addEventListener("click", prevMonth);
 next.addEventListener("click", nextMonth);
 
-initCalendar();
-
 //function to add active on day
 function addListner() {
   const days = document.querySelectorAll(".day");
   days.forEach((day) => {
     day.addEventListener("click", (e) => {
-      getActiveDay(e.target.innerHTML);
-      updateEvents(Number(e.target.innerHTML));
       activeDay = Number(e.target.innerHTML);
-      //remove active
+      getActiveDay(activeDay);
+      updateEvents(activeDay);
       days.forEach((day) => {
         day.classList.remove("active");
       });
-      //if clicked prev-date or next-date switch to that month
       if (e.target.classList.contains("prev-date")) {
         prevMonth();
-        //add active to clicked day afte month is change
         setTimeout(() => {
-          //add active where no prev-date or next-date
           const days = document.querySelectorAll(".day");
           days.forEach((day) => {
             if (
@@ -145,7 +178,6 @@ function addListner() {
         }, 100);
       } else if (e.target.classList.contains("next-date")) {
         nextMonth();
-        //add active to clicked day afte month is changed
         setTimeout(() => {
           const days = document.querySelectorAll(".day");
           days.forEach((day) => {
@@ -168,6 +200,7 @@ todayBtn.addEventListener("click", () => {
   today = new Date();
   month = today.getMonth();
   year = today.getFullYear();
+  activeDay = today.getDate();
   initCalendar();
 });
 
@@ -189,7 +222,6 @@ dateInput.addEventListener("input", (e) => {
 gotoBtn.addEventListener("click", gotoDate);
 
 function gotoDate() {
-  console.log("here");
   const dateArr = dateInput.value.split("/");
   if (dateArr.length === 2) {
     if (dateArr[0] > 0 && dateArr[0] < 13 && dateArr[1].length === 4) {
@@ -204,14 +236,10 @@ function gotoDate() {
 
 function getActiveDay(date) {
   const day = new Date(year, month, date);
-
-  // Formátum: "2024. január 15. 15:32"
   const formattedDateTime = day.toLocaleString('hu-HU', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-    // hour: 'numeric',
-    // minute: 'numeric'
   });
   eventDate.innerHTML = formattedDateTime;
 }
@@ -244,7 +272,36 @@ function updateEvents(date) {
         </div>`;
   }
   eventsContainer.innerHTML = events;
-  saveEvents();
+  // Add event listener to each event element for updating completed status
+  document.querySelectorAll('.event').forEach(eventElement => {
+    eventElement.addEventListener('click', function() {
+        const eventId = this.getAttribute('data-id');
+        const currentCompleted = this.classList.contains('completed');
+        updateEvent(eventId, !currentCompleted); // Toggle completed status
+    });
+  });
+}
+
+//function to update an event
+async function updateEvent(id, completed) {
+    try {
+        const response = await fetch('http://localhost/scheduler/update_event.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id=${id}&completed=${completed}`,
+        });
+        const data = await response.json();
+        if (data.success) {
+            console.log('Event updated:', data.message);
+            getEvents(); // Refresh events after update
+        } else {
+            console.error('Error updating event:', data.message);
+        }
+    } catch (error) {
+        console.error('Error updating event:', error);
+    }
 }
 
 //function to add event
@@ -262,12 +319,10 @@ document.addEventListener("click", (e) => {
   }
 });
 
-//allow 50 chars in eventtitle
 addEventTitle.addEventListener("input", (e) => {
   addEventTitle.value = addEventTitle.value.slice(0, 60);
 });
 
-//allow only time in eventtime from and to
 addEventFrom.addEventListener("input", (e) => {
   addEventFrom.value = addEventFrom.value.replace(/[^0-9:]/g, "");
   if (addEventFrom.value.length === 2) {
@@ -289,7 +344,7 @@ addEventTo.addEventListener("input", (e) => {
 });
 
 //function to add event to eventsArr
-addEventSubmit.addEventListener("click", () => {
+addEventSubmit.addEventListener("click", async () => {
   const eventTitle = addEventTitle.value;
   const eventTimeFrom = addEventFrom.value;
   const eventTimeTo = addEventTo.value;
@@ -298,7 +353,6 @@ addEventSubmit.addEventListener("click", () => {
     return;
   }
 
-  // Check correct time format 24 hour
   const timeFromArr = eventTimeFrom.split(":");
   const timeToArr = eventTimeTo.split(":");
   if (
@@ -316,7 +370,6 @@ addEventSubmit.addEventListener("click", () => {
   const timeFrom = convertTime(eventTimeFrom);
   const timeTo = convertTime(eventTimeTo);
 
-  // Check if event is already added
   let eventExist = false;
   eventsArr.forEach((event) => {
     if (
@@ -335,204 +388,32 @@ addEventSubmit.addEventListener("click", () => {
     alert("Event already added");
     return;
   }
+
   const newEvent = {
+    day: activeDay,
+    month: month + 1,
+    year: year,
     title: eventTitle,
     time: timeFrom + " - " + timeTo,
     completed: false
   };
-  console.log(newEvent);
-  console.log(activeDay);
-  let eventAdded = false;
-  if (eventsArr.length > 0) {
-    eventsArr.forEach((item) => {
-      if (
-        item.day === activeDay &&
-        item.month === month + 1 &&
-        item.year === year
-      ) {
-        item.events.push(newEvent);
-        eventAdded = true;
-      }
-    });
-  }
 
-  if (!eventAdded) {
-    eventsArr.push({
-      day: activeDay,
-      month: month + 1,
-      year: year,
-      events: [newEvent],
-    });
-  }
+  //save event to database
+  await saveEvents(newEvent);
 
-  console.log(eventsArr);
-  addEventWrapper.classList.remove("active");
   addEventTitle.value = "";
   addEventFrom.value = "";
   addEventTo.value = "";
-  updateEvents(activeDay);
-  // Select active day and add event class if not added
-  const activeDayEl = document.querySelector(".day.active");
-  if (!activeDayEl.classList.contains("event")) {
-    activeDayEl.classList.add("event");
-  }
-
-  fetch('/scheduler/add_event.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: `day=${activeDay}&month=${month + 1}&year=${year}&title=${eventTitle}&time=${timeFrom} - ${timeTo}`,
-  })
-  .then(response => response.json()) // Expecting JSON response
-  .then(data => {
-    if (data.success) {
-      console.log('Event added:', data.message);
-      getEvents(); // Call getEvents to refresh the events list
-    } else {
-      console.error('Error adding event:', data.message);
-      alert('Hiba történt az esemény hozzáadásakor: ' + data.message);
-    }
-  })
-  .catch(error => {
-    console.error('Network error:', error);
-    alert('Hálózati hiba történt.');
-  });
+  addEventWrapper.classList.remove("active");
 });
 
-//function to delete event when clicked on event
-eventsContainer.addEventListener("click", (e) => {
-  if (e.target.classList.contains("event")) {
-    if (confirm("Biztos készen vagy a feladattal?")) {
-      const eventID = e.target.getAttribute("data-id");
-      fetch('/scheduler/delete_event.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `id=${eventID}`,
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          console.log('Event deleted:', data.message);
-          getEvents();
-        } else {
-          console.error('Error deleting event:', data.message);
-          alert('Hiba történt az esemény törlésekor: ' + data.message);
-        }
-      })
-      .catch(error => {
-        console.error('Network error:', error);
-        alert('Hálózati hiba történt.');
-      });
-    }
-  }
-});
-
-//function to mark event as completed when clicked on event
-eventsContainer.addEventListener("click", (e) => {
-  if (e.target.classList.contains("event")) {
-    const eventID = e.target.getAttribute("data-id");
-    const completed = e.target.classList.contains("completed") ? 1 : 0;
-
-    fetch('/scheduler/update_event.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: `id=${eventID}&completed=${completed}`,
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        console.log('Event updated:', data.message);
-        getEvents();
-      } else {
-        console.error('Error updating event:', data.message);
-        alert('Hiba történt az esemény frissítésekor: ' + data.message);
-      }
-    })
-    .catch(error => {
-      console.error('Network error:', error);
-      alert('Hálózati hiba történt.');
-    });
-  }
-});
-
-//function to save events in local storage
-function saveEvents() {
-  localStorage.setItem("events", JSON.stringify(eventsArr));
-}
-
-//function to get events from local storage
-function getEvents() {
-  fetch('/scheduler/get_events.php')
-    .then(response => response.json())
-    .then(data => {
-      console.log('Fetched events:', data); // Log fetched events
-      eventsArr.length = 0; // Clear the array
-      data.forEach(event => {
-        let existingDay = eventsArr.find(item => item.day === event.day && item.month === event.month && item.year === event.year);
-        if (existingDay) {
-          existingDay.events.push({
-            id: event.id,
-            title: event.title,
-            time: event.time,
-            completed: event.completed == 1,
-          });
-        } else {
-          eventsArr.push({
-            day: event.day,
-            month: event.month,
-            year: event.year,
-            events: [{
-              id: event.id,
-              title: event.title,
-              time: event.time,
-              completed: event.completed == 1,
-            }]
-          });
-        }
-      });
-      console.log('Updated eventsArr:', eventsArr); // Log updated eventsArr
-      updateEvents(activeDay || new Date().getDate()); // Ensure updateEvents is called with the correct active day
-    })
-    .catch(error => {
-      console.error('Network error:', error);
-      alert('Hálózati hiba történt az események lekérésekor.');
-    });
-}
-
+// Function to convert time from HH:MM format to a readable string format
 function convertTime(time) {
-  //convert time to 24 hour format
-  let timeArr = time.split(":");
-  let timeHour = timeArr[0];
-  let timeMin = timeArr[1];
-  let timeFormat = timeHour >= 12 ? "DU" : "DE";
-  timeHour = timeHour % 12 || 12;
-  time = timeHour + ":" + timeMin + " " + timeFormat;
-  return time;
+    let [hour, minute] = time.split(":");
+    let period = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12;
+    hour = hour ? hour : 12; // Convert "0" hour to "12"
+    return `${hour}:${minute} ${period}`;
 }
 
-getEvents(); // Hívjuk meg a getEvents függvényt az oldal betöltésekor
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+getEvents(); //get the events when the page loads
