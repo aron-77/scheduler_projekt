@@ -1,0 +1,34 @@
+<?php
+session_start();
+header('Content-Type: application/json');
+require_once 'db_connect.php';
+
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(array('success' => false, 'message' => 'Not logged in'));
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+
+$sql = "SELECT events.* FROM events 
+        JOIN user_events ON events.id = user_events.event_id
+        WHERE user_events.user_id = ?";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$events = array();
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $row['completed'] = (bool) $row['completed'];
+        $events[] = $row;
+    }
+}
+
+echo json_encode($events);
+
+$stmt->close();
+$conn->close();
+?>
