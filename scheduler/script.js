@@ -10,12 +10,12 @@ const calendar = document.querySelector(".calendar"),
   eventDate = document.querySelector(".event-date"),
   eventsContainer = document.querySelector(".events"),
   addEventBtn = document.querySelector(".add-event"),
-  addEventWrapper = document.querySelector(".add-event-wrapper "),
-  addEventCloseBtn = document.querySelector(".close "),
-  addEventTitle = document.querySelector(".event-name "),
-  addEventFrom = document.querySelector(".event-time-from "),
-  addEventTo = document.querySelector(".event-time-to "),
-  addEventSubmit = document.querySelector(".add-event-btn ");
+  addEventWrapper = document.querySelector(".add-event-wrapper"),
+  addEventCloseBtn = document.querySelector(".close"),
+  addEventTitle = document.querySelector(".event-name"),
+  addEventFrom = document.querySelector(".event-time-from"),
+  addEventTo = document.querySelector(".event-time-to"),
+  addEventSubmit = document.querySelector(".add-event-btn");
 
 let today = new Date();
 let activeDay;
@@ -388,7 +388,7 @@ addEventSubmit.addEventListener("click", () => {
   .then(data => {
     if (data.success) {
       console.log('Event added:', data.message);
-      getEvents();
+      getEvents(); // Call getEvents to refresh the events list
     } else {
       console.error('Error adding event:', data.message);
       alert('Hiba történt az esemény hozzáadásakor: ' + data.message);
@@ -470,6 +470,7 @@ function getEvents() {
   fetch('/scheduler/get_events.php')
     .then(response => response.json())
     .then(data => {
+      console.log('Fetched events:', data); // Log fetched events
       eventsArr.length = 0; // Clear the array
       data.forEach(event => {
         let existingDay = eventsArr.find(item => item.day === event.day && item.month === event.month && item.year === event.year);
@@ -494,7 +495,8 @@ function getEvents() {
           });
         }
       });
-      updateEvents(activeDay);
+      console.log('Updated eventsArr:', eventsArr); // Log updated eventsArr
+      updateEvents(activeDay || new Date().getDate()); // Ensure updateEvents is called with the correct active day
     })
     .catch(error => {
       console.error('Network error:', error);
