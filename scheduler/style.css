@@ -508,6 +508,37 @@ body {
   text-decoration: line-through;
 }
 
+
+
+
+
+
+
+#logout-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#logout-btn:hover {
+  background-color: #c82333;
+}
+
+
+
+
+
+
+
+
+
+
 /* media queries */
 
 @media screen and (max-width: 1000px) {

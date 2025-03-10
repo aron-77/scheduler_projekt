@@ -1,3 +1,16 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Ellenőrizd a bejelentkezést
+    fetch('check_login.php')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.loggedIn) {
+                window.location.href = 'login.html';
+            } else {
+                getEvents(); // Ha be van jelentkezve, kérd le a feladatokat
+            }
+        });
+});
+
 const calendar = document.querySelector(".calendar"),
   date = document.querySelector(".date"),
   daysContainer = document.querySelector(".days"),
@@ -42,7 +55,7 @@ let eventsArr = [];
 //function to fetch the events from the database
 async function getEvents() {
   try {
-    const response = await fetch("http://localhost/scheduler/get_events.php");
+    const response = await fetch("get_events.php");
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -417,5 +430,20 @@ function convertTime(time) {
     hour = hour ? hour : 12; // Convert "0" hour to "12"
     return `${hour}:${minute} ${period}`;
 }
+
+document.getElementById('logout-btn').addEventListener('click', function() {
+    fetch('logout.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = 'login.html';
+            } else {
+                console.error('Hiba a kijelentkezés során:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Hiba a kijelentkezés során:', error);
+        });
+});
 
 getEvents(); //get the events when the page loads
