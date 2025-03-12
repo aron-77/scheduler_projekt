@@ -17,12 +17,12 @@ if ($stmt->num_rows > 0) {
 
     if (password_verify($password, $hashed_password)) {
         $_SESSION['user_id'] = $user_id;
-        echo json_encode(array('success' => true, 'message' => 'Login successful'));
+        echo json_encode(array('success' => true, 'message' => 'Sikeres bejelentkezés'));
     } else {
-        echo json_encode(array('success' => false, 'message' => 'Incorrect password'));
+        echo json_encode(array('success' => false, 'message' => 'Helytelen jelszó'));
     }
 } else {
-    echo json_encode(array('success' => false, 'message' => 'User not found'));
+    echo json_encode(array('success' => false, 'message' => 'Felhasználó nem található'));  
 }
 
 $stmt->close();
