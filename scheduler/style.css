@@ -273,22 +273,26 @@ body {
 }
 
 .right .category-filter {
-    width: 50%; /* Adjust width to make it much more narrow */
-    height: 35px; /* Adjust height as needed */
-    margin: 10px 0; /* Adjust margin as needed */
-    padding: 0 15px; /* Adjust padding as needed */
-    border: 1px solid #ccc; /* Adjust border color as needed */
-    border-radius: 5px; /* Adjust border radius as needed */
-    font-size: 0.9rem; /* Adjust font size as needed */
-    font-weight: 400;
-    color: #373c4f;
-    background-color: #f9f9f9; /* Adjust background color as needed */
-    transition: border-color 0.3s, background-color 0.3s; /* Add transition for smooth effect */
+  width: 60%; /* Slightly wider for better usability */
+  height: 40px; /* Adjusted height */
+  margin: 10px 0; /* Maintain margin */
+  padding: 0 15px; /* Maintain padding */
+  border: 2px solid var(--primary-clr); /* Use primary color for border */
+  border-radius: 8px; /* Increased border radius for a smoother look */
+  font-size: 1rem; /* Slightly larger font size */
+  font-weight: 500; /* Make text slightly bolder */
+  color: #4c49ff; /* Match primary color */
+  background-color: #f0f4ff; /* Light background for contrast */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+  transition: all 0.3s ease; /* Smooth transitions */
+  /* tabindex: -1; Prevent arrow key navigation from focusing on this element */
 }
 
 .right .category-filter:focus {
-    border-color: var(--primary-clr); /* Adjust focus border color */
-    background-color: #fff; /* Adjust focus background color */
+  border-color: #4c49ff; /* Highlight border on focus */
+  background-color: #ffffff; /* White background on focus */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Stronger shadow on focus */
+  outline: none; /* Remove default outline */
 }
 
 .events {
@@ -580,10 +584,10 @@ body {
 }
 
 #logout-btn {
-  position: fixed; /* Changed to fixed positioning */
+  position: fixed;
   top: 10px;
   right: 10px;
-  padding: 10px 20px;
+  padding: 8px 15px; /* Reduced padding to make it narrower */
   background-color: #dc3545;
   color: white;
   border: none;
@@ -605,12 +609,89 @@ body {
   position: fixed;
   top: 10px;
   left: 10px;
-  padding: 10px 20px;
-  background-color: #4c49ff;
-  color: white;
-  border-radius: 5px;
-  font-size: 1rem;
+  font-size: 1.2rem; /* Increased font size */
+  font-weight: bold; /* Make text bold */
+  color: #4c49ff; /* Primary color for visibility */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Add subtle shadow for readability */
   z-index: 1000; /* Ensure it's on top of other elements */
+  background-color: transparent; /* No background */
+  padding: 0; /* Remove padding */
+  border-radius: 0; /* Remove border radius */
+}
+
+/* Dark mode styles */
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode .container {
+  background-color: #1e1e1e;
+}
+
+body.dark-mode .calendar {
+  background-color: #2c2c2c;
+  color: #e0e0e0;
+}
+
+body.dark-mode .calendar .days .day {
+  color: #b3b3b3;
+}
+
+body.dark-mode .calendar .days .day.active {
+  background-color: #4c49ff;
+  color: #fff;
+}
+
+body.dark-mode .right .category-filter {
+  background-color: #2c2c2c;
+  color: #e0e0e0;
+  border: 2px solid #4c49ff;
+}
+
+body.dark-mode .events .event {
+  background: linear-gradient(90deg, #333333);
+  color: #e0e0e0;
+}
+
+body.dark-mode .add-event-wrapper {
+  background-color: #2c2c2c;
+  color: #e0e0e0;
+}
+
+/* Toggle button styles */
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #4c49ff;
+  background-color: #fff;
+  border: 2px solid #4c49ff;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+  background-color: #4c49ff;
+  color: #fff;
+}
+
+body.dark-mode .dark-mode-toggle {
+  background-color: #4c49ff;
+  color: #fff;
+}
+
+body.dark-mode .dark-mode-toggle:hover {
+  background-color: #fff;
+  color: #4c49ff;
 }
 
 /* media queries */

@@ -570,3 +570,45 @@ document.getElementById('category-filter').addEventListener('change', () => {
 });
 
 getEvents(); //get the events when the page loads
+
+document.addEventListener("DOMContentLoaded", () => {
+  const startField = document.querySelector("#teendo-kezdete"); // Replace with the actual ID or selector
+  const endField = document.querySelector("#teendo-vege"); // Replace with the actual ID or selector
+  const categoryField = document.querySelector(".category-filter");
+
+  if (startField && endField && categoryField) {
+    startField.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown") {
+        e.preventDefault(); // Prevent default behavior
+        endField.focus(); // Move focus to the "teendő vége" field
+      }
+    });
+
+    endField.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowUp") {
+        e.preventDefault(); // Prevent default behavior
+        startField.focus(); // Move focus back to the "teendő kezdete" field
+      }
+    });
+  }
+});
+
+// Dark mode toggle functionality
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+const currentTheme = localStorage.getItem('theme');
+
+// Apply the saved theme on page load
+if (currentTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+}
+
+// Toggle dark mode on button click
+darkModeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    darkModeToggle.innerHTML = isDarkMode
+        ? '<i class="fas fa-sun"></i>'
+        : '<i class="fas fa-moon"></i>';
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+});

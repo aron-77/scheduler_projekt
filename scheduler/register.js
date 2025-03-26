@@ -1,3 +1,27 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.register-container');
+    container.style.opacity = 0;
+    container.style.transition = 'opacity 1s ease-in-out';
+    setTimeout(() => {
+        container.style.opacity = 1;
+    }, 100);
+
+    // Password toggle functionality
+    document.getElementById('toggle-password').addEventListener('click', function() {
+        const passwordField = document.getElementById('password');
+        const isPassword = passwordField.type === 'password';
+        passwordField.type = isPassword ? 'text' : 'password';
+        this.querySelector('svg').setAttribute('fill', isPassword ? '#d4bfff' : '#b3b3cc');
+    });
+
+    document.getElementById('toggle-confirm-password').addEventListener('click', function() {
+        const confirmPasswordField = document.getElementById('confirm_password');
+        const isPassword = confirmPasswordField.type === 'password';
+        confirmPasswordField.type = isPassword ? 'text' : 'password';
+        this.querySelector('svg').setAttribute('fill', isPassword ? '#d4bfff' : '#b3b3cc');
+    });
+});
+
 document.getElementById('register-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
