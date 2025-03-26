@@ -14,9 +14,10 @@ $month = $_POST['month'];
 $year = $_POST['year'];
 $title = $_POST['title'];
 $time = $_POST['time'];
+$category = $_POST['category']; // Ensure category is received
 
-$stmt = $conn->prepare("INSERT INTO events (day, month, year, title, time) VALUES (?, ?, ?, ?, ?)");
-$stmt->bind_param("iiiss", $day, $month, $year, $title, $time);
+$stmt = $conn->prepare("INSERT INTO events (day, month, year, title, time, category) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("iiisss", $day, $month, $year, $title, $time, $category); // Bind category
 
 if ($stmt->execute()) {
     $event_id = $conn->insert_id;
