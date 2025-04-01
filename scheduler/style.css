@@ -622,41 +622,62 @@ body {
 /* Dark mode styles */
 body.dark-mode {
   background-color: #121212;
-  color: #e0e0e0;
+  color: #f5f5f5; /* Brighter text for better readability */
 }
 
 body.dark-mode .container {
   background-color: #1e1e1e;
+  color: #f5f5f5; /* Brighter text */
 }
 
 body.dark-mode .calendar {
   background-color: #2c2c2c;
-  color: #e0e0e0;
+  color: #f5f5f5; /* Brighter text */
 }
 
 body.dark-mode .calendar .days .day {
-  color: #b3b3b3;
+  color: #d1d1d1; /* Slightly brighter day text */
 }
 
 body.dark-mode .calendar .days .day.active {
   background-color: #4c49ff;
-  color: #fff;
+  color: #ffffff; /* Ensure active day text is fully white */
 }
 
 body.dark-mode .right .category-filter {
   background-color: #2c2c2c;
-  color: #e0e0e0;
+  color: #f5f5f5; /* Brighter text */
   border: 2px solid #4c49ff;
 }
 
 body.dark-mode .events .event {
-  background: linear-gradient(90deg, #333333);
-  color: #e0e0e0;
+  background: linear-gradient(90deg, #3a3a3a); /* Slightly brighter gradient */
+  color: #f5f5f5; /* Brighter text */
 }
 
 body.dark-mode .add-event-wrapper {
   background-color: #2c2c2c;
-  color: #e0e0e0;
+  color: #f5f5f5; /* Brighter text */
+}
+
+body.dark-mode .add-event {
+  color: #ffffff; /* Make the plus button text white */
+  border: 2px solid #ffffff; /* White border for better visibility */
+  opacity: 1; /* Ensure full visibility */
+  background-color: #4c49ff; /* Add a background color for contrast */
+}
+
+body.dark-mode .add-event:hover {
+  background-color: #ffffff; /* Invert background on hover */
+  color: #4c49ff; /* Match primary color */
+}
+
+body.dark-mode .add-event-header .title {
+  color: #ffffff; /* Make "teendo hozzaadasa" text white */
+}
+
+body.dark-mode .events .no-event {
+  color: #ffffff; /* Make "nincsenek teendok :)" text white */
 }
 
 /* Toggle button styles */

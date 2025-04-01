@@ -441,6 +441,13 @@ addEventBtn.addEventListener("click", async () => {
     }
 });
 
+addEventCloseBtn.addEventListener("click", () => {
+    addEventWrapper.classList.remove("active");
+    addEventTitle.value = "";
+    addEventFrom.value = "";
+    addEventTo.value = "";
+});
+
 // Function to convert time from HH:MM format to a readable string format (24 hour)
 function convertTime(time) {
     return time; // Simply return the time as it is already in HH:MM format
