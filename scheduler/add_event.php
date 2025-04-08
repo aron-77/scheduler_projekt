@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 require_once 'db_connect.php';
 
 if (!isset($_SESSION['user_id'])) {
-    echo json_encode(array('success' => false, 'message' => 'Not logged in'));
+    echo json_encode(array('success' => false, 'message' => 'Nincen bejelentkezve'));
     exit;
 }
 
