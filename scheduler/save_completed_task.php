@@ -16,7 +16,7 @@ if ($conn->connect_error) {
 $user_id = $_POST['user_id'];
 $task_id = $_POST['task_id'];
 
-// Prepare and bind
+// Prepare and binda
 $stmt = $conn->prepare("INSERT INTO usertask (user_id, task_id) VALUES (?, ?)");
 $stmt->bind_param("ii", $user_id, $task_id);
 
