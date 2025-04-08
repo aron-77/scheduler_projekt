@@ -14,14 +14,14 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     // Send error response in JSON format
     http_response_code(500); // Internal Server Error
-    echo json_encode(['success' => false, 'message' => 'Database connection failed: ' . $conn->connect_error]);
+    echo json_encode(['success' => false, 'message' => 'Az adatbázis-csatlakozás meghiúsult: ' . $conn->connect_error]);
     exit;
 }
 
 // Check if the request method is DELETE
 if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
     http_response_code(405); // Method Not Allowed
-    echo json_encode(['success' => false, 'message' => 'Method not allowed. Only DELETE is supported.']);
+    echo json_encode(['success' => false, 'message' => 'A metódus nem engedélyezett. Csak a DELETE funkció támogatott.']);
     exit;
 }
 
@@ -31,7 +31,7 @@ $eventId = $_GET['id'] ?? null;
 if (is_null($eventId)) {
     // Handle missing event ID
     http_response_code(400); // Bad Request
-    echo json_encode(['success' => false, 'message' => 'Event ID is missing.']);
+    echo json_encode(['success' => false, 'message' => 'Az eseményazonosító hiányzik.']);
     exit;
 }
 
@@ -57,17 +57,17 @@ try {
     if ($stmt->affected_rows > 0) {
         // Commit the transaction
         $conn->commit();
-        echo json_encode(['success' => true, 'message' => 'Event deleted successfully.']);
+        echo json_encode(['success' => true, 'message' => 'Esemény sikeresen törölve.']);
     } else {
         http_response_code(404); // Not Found
-        echo json_encode(['success' => false, 'message' => 'Event not found.']);
+        echo json_encode(['success' => false, 'message' => 'Esemény nem található.']);
     }
     $stmt->close();
 } catch (Exception $e) {
     // Rollback the transaction in case of error
     $conn->rollback();
     http_response_code(500); // Internal Server Error
-    echo json_encode(['success' => false, 'message' => 'Error deleting event: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Hiba történt az esemény törlésekor: ' . $e->getMessage()]);
 } finally {
     $conn->close();
 }

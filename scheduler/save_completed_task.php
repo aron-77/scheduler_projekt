@@ -21,9 +21,9 @@ $stmt = $conn->prepare("INSERT INTO usertask (user_id, task_id) VALUES (?, ?)");
 $stmt->bind_param("ii", $user_id, $task_id);
 
 if ($stmt->execute()) {
-    echo json_encode(["message" => "Task saved successfully"]);
+    echo json_encode(["message" => "A feladat sikeresen mentve"]);
 } else {
-    echo json_encode(["message" => "Error saving task"]);
+    echo json_encode(["message" => "Hiba a feladat mentése közben"]);
 }
 
 $stmt->close();

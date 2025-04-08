@@ -17,16 +17,16 @@ if (empty($id) || !isset($completed)) {
 
 $stmt = $conn->prepare("UPDATE events SET completed = ? WHERE id = ?");
 if (!$stmt) {
-    echo json_encode(['success' => false, 'message' => 'Prepare failed: ' . $conn->error]);
+    echo json_encode(['success' => false, 'message' => 'Az előkészítés meghiúsult: ' . $conn->error]);
     exit;
 }
 $stmt->bind_param("ii", $completed, $id);
 
 if ($stmt->execute()) {
-    echo json_encode(['success' => true, 'message' => 'Event updated successfully']);
+    echo json_encode(['success' => true, 'message' => 'Az esemény sikeresen frissítve']);
     exit;
 } else {
-    echo json_encode(['success' => false, 'message' => 'Error updating event: ' . $stmt->error]);
+    echo json_encode(['success' => false, 'message' => 'Hiba történt az esemény frissítésekor: ' . $stmt->error]);
     exit;
 }
 
